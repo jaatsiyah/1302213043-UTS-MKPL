@@ -94,19 +94,21 @@ public class Employee {
 		childIdNumbers.add(childIdNumber);
 	}
 
-	public int getAnnualIncomeTax() {
+    public int getAnnualIncomeTax() {
+        int monthWorkingInYear = calculateMonthsWorkingInYear();
+        return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible,
+                spouseIdNumber.equals(""), childIdNumbers.size());
+    }
 
-		LocalDate date = LocalDate.now();
-		int yearJoined = dateJoined.getYear();
-		int monthJoined = dateJoined.getMonthValue();
+    private int calculateMonthsWorkingInYear() {
+        LocalDate currentDate = LocalDate.now();
+        int yearJoined = dateJoined.getYear();
+        int monthJoined = dateJoined.getMonthValue();
 
-		if (date.getYear() == yearJoined) {
-			monthWorkingInYear = date.getMonthValue() - monthJoined;
-		} else {
-			monthWorkingInYear = 12;
-		}
-
-		return TaxFunction.calculateTax(monthlySalary, otherMonthlyIncome, monthWorkingInYear, annualDeductible,
-				spouseIdNumber.equals(""), childIdNumbers.size());
-	}
+        if (currentDate.getYear() == yearJoined) {
+            return currentDate.getMonthValue() - monthJoined;
+        } else {
+            return 12;
+        }
+    }
 }
